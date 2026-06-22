@@ -43,12 +43,19 @@ async function migrate() {
             name: "Administrador PetShop",
             email: adminEmail,
             password: await bcrypt.hash(adminPassword, 10),
-            phone: "00000000000"
+            phone: "00000000000",
+            role: "admin"
         }
     });
 
     if (!created && !admin.password) {
         admin.password = await bcrypt.hash(adminPassword, 10);
+        admin.role = "admin";
+        await admin.save();
+    }
+
+    if (!created && admin.role !== "admin") {
+        admin.role = "admin";
         await admin.save();
     }
 

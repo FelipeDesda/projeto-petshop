@@ -1,0 +1,298 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-06-22T00:00:00.000Z",
+  "__export_source": "insomnia.desktop:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_security_tests",
+      "_type": "workspace",
+      "name": "PetShop API - Testes de Segurança",
+      "description": "Testes de autenticação e autorização",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_production",
+      "_type": "environment",
+      "parentId": "wrk_security_tests",
+      "name": "Production",
+      "data": {
+        "base_url": "http://localhost:8080",
+        "admin_token": "",
+        "user_token": "",
+        "admin_id": "1",
+        "user_id": "2"
+      }
+    },
+    {
+      "_id": "req_login_admin",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "1. Login Admin",
+      "method": "POST",
+      "url": "{{ base_url }}/login",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@petshop.local\",\n  \"password\": \"admin123\"\n}"
+      },
+      "tests": "tests = [];\nvar resp = JSON.parse(responseBody);\npostman.setEnvironmentVariable(\"admin_token\", resp.token);\ntests.push(\"Token salvo em admin_token\");"
+    },
+    {
+      "_id": "req_login_user",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "2. Login User Normal (ID 2)",
+      "method": "POST",
+      "url": "{{ base_url }}/login",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"cliente1@petshop.local\",\n  \"password\": \"admin123\"\n}"
+      },
+      "tests": "tests = [];\nvar resp = JSON.parse(responseBody);\npostman.setEnvironmentVariable(\"user_token\", resp.token);\ntests.push(\"Token salvo em user_token\");"
+    },
+    {
+      "_id": "req_users_list_admin",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "✅ Admin: Listar todos usuários",
+      "method": "GET",
+      "url": "{{ base_url }}/users",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ admin_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_users_list_user",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "❌ User: Listar todos usuários (403)",
+      "method": "GET",
+      "url": "{{ base_url }}/users",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ user_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_users_get_own",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "✅ User: Ver seus próprios dados",
+      "method": "GET",
+      "url": "{{ base_url }}/users/{{ user_id }}",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ user_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_users_get_other",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "❌ User: Ver dados de outro usuário (403)",
+      "method": "GET",
+      "url": "{{ base_url }}/users/1",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ user_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_users_get_admin",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "✅ Admin: Ver qualquer usuário",
+      "method": "GET",
+      "url": "{{ base_url }}/users/2",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ admin_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_addresses_list_user",
+      "_type": "request",
+      "parentId": "fld_addresses",
+      "name": "✅ User: Listar seus endereços",
+      "method": "GET",
+      "url": "{{ base_url }}/addresses",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ user_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_addresses_list_no_auth",
+      "_type": "request",
+      "parentId": "fld_addresses",
+      "name": "❌ Sem autenticação: 401",
+      "method": "GET",
+      "url": "{{ base_url }}/addresses",
+      "headers": []
+    },
+    {
+      "_id": "req_addresses_create",
+      "_type": "request",
+      "parentId": "fld_addresses",
+      "name": "✅ User: Criar endereço",
+      "method": "POST",
+      "url": "{{ base_url }}/addresses",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ user_token }}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"id_user\": {{ user_id }},\n  \"name\": \"Endereço de Teste\",\n  \"district\": \"Vila Central\",\n  \"city\": \"São Paulo\"\n}"
+      }
+    },
+    {
+      "_id": "req_pets_list_user",
+      "_type": "request",
+      "parentId": "fld_pets",
+      "name": "✅ User: Listar seus pets",
+      "method": "GET",
+      "url": "{{ base_url }}/pets",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ user_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_products_list",
+      "_type": "request",
+      "parentId": "fld_products",
+      "name": "✅ Público: Listar produtos",
+      "method": "GET",
+      "url": "{{ base_url }}/products",
+      "headers": []
+    },
+    {
+      "_id": "req_products_create_user",
+      "_type": "request",
+      "parentId": "fld_products",
+      "name": "❌ User: Criar produto (403)",
+      "method": "POST",
+      "url": "{{ base_url }}/products",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ user_token }}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Não vai funcionar\",\n  \"description\": \"Teste\",\n  \"category\": \"Alimentação\",\n  \"price\": 50.00,\n  \"stock\": 10\n}"
+      }
+    },
+    {
+      "_id": "req_products_create_admin",
+      "_type": "request",
+      "parentId": "fld_products",
+      "name": "✅ Admin: Criar produto",
+      "method": "POST",
+      "url": "{{ base_url }}/products",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ admin_token }}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Ração Premium Teste\",\n  \"description\": \"Ração para cães adultos\",\n  \"category\": \"Alimentação\",\n  \"price\": 129.90,\n  \"stock\": 25\n}"
+      }
+    },
+    {
+      "_id": "req_orders_list_user",
+      "_type": "request",
+      "parentId": "fld_orders",
+      "name": "✅ User: Listar seus pedidos",
+      "method": "GET",
+      "url": "{{ base_url }}/orders",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ user_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_security_tests",
+      "name": "🔐 Autenticação (Login)"
+    },
+    {
+      "_id": "fld_users",
+      "_type": "request_group",
+      "parentId": "wrk_security_tests",
+      "name": "👥 Usuários"
+    },
+    {
+      "_id": "fld_addresses",
+      "_type": "request_group",
+      "parentId": "wrk_security_tests",
+      "name": "📍 Endereços"
+    },
+    {
+      "_id": "fld_pets",
+      "_type": "request_group",
+      "parentId": "wrk_security_tests",
+      "name": "🐾 Pets"
+    },
+    {
+      "_id": "fld_products",
+      "_type": "request_group",
+      "parentId": "wrk_security_tests",
+      "name": "🛍️ Produtos"
+    },
+    {
+      "_id": "fld_orders",
+      "_type": "request_group",
+      "parentId": "wrk_security_tests",
+      "name": "📦 Pedidos"
+    }
+  ]
+}

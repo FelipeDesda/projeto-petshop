@@ -34,6 +34,12 @@ const UserModel = sequelize.define(
         picture: {
             type: DataTypes.TEXT,
             allowNull: true
+        },
+
+        role: {
+            type: DataTypes.ENUM('user', 'admin', 'moderator'),
+            allowNull: false,
+            defaultValue: 'user'
         }
     },
     {

@@ -91,7 +91,8 @@ Ao subir o container web, o entrypoint também executa `node command.js migrate`
 
 Tabelas principais:
 
-- `users`: clientes/usuários. Possui `email` único e `password` criptografado com bcrypt.
+- `users`: clientes/usuários. Possui `email` único, `password` criptografado com bcrypt e `role` para autorização.
+  - Campos: id, name, email, password, phone, picture, **role** (user|admin|moderator)
 - `addresses`: endereços dos clientes.
 - `pets`: pets vinculados aos clientes.
 - `products`: catálogo e estoque da loja.
@@ -129,15 +130,76 @@ Rota pública:
 
 - `POST /login`: gera token JWT.
 
-Rotas protegidas por JWT:
+Rotas protegidas por JWT e autorização:
 
-- `GET /users`, `GET /users/:id`, `POST /users`, `PUT /users/:id`, `DELETE /users/:id`
-- `GET /addresses`, `GET /addresses/:id`, `POST /addresses`, `PUT /addresses/:id`, `DELETE /addresses/:id`
-- `GET /pets`, `GET /pets/:id`, `POST /pets`, `PUT /pets/:id`, `DELETE /pets/:id`
-- `GET /products`, `GET /products/:id`, `POST /products`, `PUT /products/:id`, `DELETE /products/:id`
-- `GET /orders`, `GET /orders/:id`, `POST /orders`, `PUT /orders/:id`, `DELETE /orders/:id`
+**Usuários:**
+- `GET /users`: lista usuários (apenas admin)
+- `GET /users/:id`: obter usuário (apenas proprietário ou admin)
+- `POST /users`: criar usuário (público)
+- `PUT /users/:id`: atualizar usuário (apenas proprietário ou admin)
+- `DELETE /users/:id`: deletar usuário (apenas proprietário ou admin)
 
-Também existe middleware próprio de autenticação JWT em `app/Http/Middlewares/AuthMiddleware.js`.
+**Endereços (do usuário autenticado):**
+- `GET /addresses`: lista endereços do usuário
+- `GET /addresses/:id`: obter endereço (apenas proprietário ou admin)
+- `POST /addresses`: criar endereço (requer autenticação)
+- `PUT /addresses/:id`: atualizar endereço (apenas proprietário ou admin)
+- `DELETE /addresses/:id`: deletar endereço (apenas proprietário ou admin)
+
+**Pets (do usuário autenticado):**
+- `GET /pets`: lista pets do usuário
+- `GET /pets/:id`: obter pet (apenas proprietário ou admin)
+- `POST /pets`: criar pet (requer autenticação)
+- `PUT /pets/:id`: atualizar pet (apenas proprietário ou admin)
+- `DELETE /pets/:id`: deletar pet (apenas proprietário ou admin)
+
+**Produtos (catálogo público):**
+- `GET /products`: lista produtos (público)
+- `GET /products/:id`: obter produto (público)
+- `POST /products`: criar produto (apenas admin)
+- `PUT /products/:id`: atualizar produto (apenas admin)
+- `DELETE /products/:id`: deletar produto (apenas admin)
+
+**Pedidos (do usuário autenticado):**
+- `GET /orders`: lista pedidos do usuário
+- `GET /orders/:id`: obter pedido (apenas proprietário ou admin)
+- `POST /orders`: criar pedido (requer autenticação)
+- `PUT /orders/:id`: atualizar pedido (apenas proprietário ou admin)
+- `DELETE /orders/:id`: deletar pedido (apenas proprietário ou admin)
+
+## 6.1 Autenticação e Autorização
+
+### Camadas de Segurança
+
+O sistema implementa segurança em 3 camadas:
+
+1. **AuthMiddleware** (`app/Http/Middlewares/AuthMiddleware.js`): Valida JWT e extrai `id` e `role`
+2. **Middlewares de Permissões**:
+   - `CheckAdminMiddleware`: Verifica se o usuário é admin
+   - `CheckOwnerOrAdminMiddleware`: Verifica se é proprietário do recurso ou admin
+   - `CheckResourceOwnerMiddleware`: Factory dinâmica para verificar propriedade de qualquer recurso
+
+3. **Lógica nos Controllers**: Filtros adicionais de negócio
+
+### Papéis (Roles)
+
+- **user**: Usuário comum, acessa apenas seus próprios dados
+- **admin**: Acesso total, gerencia usuários, produtos, etc.
+- **moderator**: Reservado para futuro (não implementado ainda)
+
+### Fluxo de Autorização
+
+Exemplo: Atualizar um endereço
+
+```
+1. Cliente faz: PUT /addresses/5 com Authorization: Bearer <token>
+2. AuthMiddleware valida o token e extrai request.user = { id: 3, role: 'user' }
+3. CheckResourceOwnerMiddleware(AddressModel, 'id_user') verifica:
+   - Se role === 'admin': permite
+   - Se id_user do endereço === id do usuário: permite
+   - Caso contrário: nega com 403
+4. UpdateAddressController executa a atualização
+```
 
 ## 7. Login e JWT
 
@@ -156,13 +218,21 @@ curl -X POST http://localhost:8080/login \
   -d '{"email":"admin@petshop.local","password":"admin123"}'
 ```
 
+Resposta (JWT contém `id` e `role`):
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
 Use o token retornado:
 
 ```http
 Authorization: Bearer SEU_TOKEN
 ```
 
-Exemplo de criação de produto:
+Exemplo de criação de produto (apenas admin):
 
 ```sh
 curl -X POST http://localhost:8080/products \
@@ -171,7 +241,20 @@ curl -X POST http://localhost:8080/products \
   -d '{"name":"Ração premium","description":"Ração para cães adultos","category":"Alimentação","price":129.90,"stock":25}'
 ```
 
-Exemplo de criação de pedido:
+Exemplo de acesso negado (user tentando listar todos os usuários):
+
+```sh
+# User com role 'user' tenta acessar:
+curl -X GET http://localhost:8080/users \
+  -H "Authorization: Bearer USER_TOKEN"
+
+# Resposta 403:
+{
+  "error": "Access denied: Admin role required"
+}
+```
+
+Exemplo de criação de pedido (requer autenticação):
 
 ```json
 {

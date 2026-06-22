@@ -47,9 +47,9 @@ export default async function LoginController(request, response) {
             });
         }
 
-        // Gera JWT com o id do usuário
+        // Gera JWT com o id e role do usuário
         const token = jwt.sign(
-            { id: user.id },
+            { id: user.id, role: user.role },
             process.env.JWT_SECRET || "petshop-dev-secret",
             { expiresIn: "24h" }
         );

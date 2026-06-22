@@ -5,6 +5,7 @@ import UserModel from "../../../Models/UserModel.js";
 
 export default async function ListOrderController(request, response) {
     try {
+        const userId = request.user.id;
         const pageRequest = Number(request.query.page) || 1;
         const limitRequest = Number(request.query.limit) || 10;
         const page = pageRequest < 1 ? 1 : pageRequest;
@@ -12,6 +13,9 @@ export default async function ListOrderController(request, response) {
         const offset = (page - 1) * limit;
 
         const { rows, count: total } = await OrderModel.findAndCountAll({
+            where: {
+                id_user: userId
+            },
             include: [
                 { model: UserModel, as: "customer" },
                 { model: OrderItemModel, as: "items", include: [{ model: ProductModel, as: "product" }] }

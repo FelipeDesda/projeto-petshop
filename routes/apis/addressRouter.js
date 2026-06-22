@@ -5,19 +5,27 @@ import GetAddressController from '../../app/Http/Controllers/AddressApi/GetAddre
 import CreateAddressController from '../../app/Http/Controllers/AddressApi/CreateAddressController.js';
 import UpdateAddressController from '../../app/Http/Controllers/AddressApi/UpdateAddressController.js';
 import DeleteAddressController from '../../app/Http/Controllers/AddressApi/DeleteAddressController.js';
+import AuthMiddleware from '../../app/Http/Middlewares/AuthMiddleware.js';
+import CheckResourceOwnerMiddleware from '../../app/Http/Middlewares/CheckResourceOwnerMiddleware.js';
+import AddressModel from '../../app/Models/AddressModel.js';
 
 export default (() => {
     const router = Router();
 
-    router.get('/', ListAddressController);
+    // Listar endereços do usuário autenticado
+    router.get('/', AuthMiddleware, ListAddressController);
 
-    router.get('/:id', GetAddressController);
+    // Obter um endereço específico (protegido - apenas proprietário ou admin)
+    router.get('/:id', AuthMiddleware, CheckResourceOwnerMiddleware(AddressModel, 'id_user'), GetAddressController);
 
-    router.post('/', CreateAddressController);
+    // Criar endereço (protegido - requer autenticação)
+    router.post('/', AuthMiddleware, CreateAddressController);
 
-    router.put('/:id', UpdateAddressController);
+    // Atualizar endereço (protegido - apenas proprietário ou admin)
+    router.put('/:id', AuthMiddleware, CheckResourceOwnerMiddleware(AddressModel, 'id_user'), UpdateAddressController);
 
-    router.delete('/:id', DeleteAddressController);
+    // Deletar endereço (protegido - apenas proprietário ou admin)
+    router.delete('/:id', AuthMiddleware, CheckResourceOwnerMiddleware(AddressModel, 'id_user'), DeleteAddressController);
 
     return router;
 })();

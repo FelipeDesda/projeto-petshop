@@ -3,6 +3,7 @@ import UserModel from "../../../Models/UserModel.js";
 
 export default async function ListPetController(request, response) {
     try {
+        const userId = request.user.id;
         const pageRequest = Number(request.query.page) || 1;
         const limitRequest = Number(request.query.limit) || 10;
         const page = pageRequest < 1 ? 1 : pageRequest;
@@ -10,6 +11,9 @@ export default async function ListPetController(request, response) {
         const offset = (page - 1) * limit;
 
         const { rows, count: total } = await PetModel.findAndCountAll({
+            where: {
+                id_user: userId
+            },
             include: [{ model: UserModel, as: "owner" }],
             order: [["id", "ASC"]],
             limit: limit + 1,

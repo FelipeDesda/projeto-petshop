@@ -3,6 +3,7 @@ import UserModel from "../../../Models/UserModel.js";
 
 export default async function ListAddressController(request, response) {
     try {
+        const userId = request.user.id;
         const pageRequest = Number(request.query.page) || 1;
         const limitRequest = Number(request.query.limit) || 10;
 
@@ -13,6 +14,9 @@ export default async function ListAddressController(request, response) {
         let next = null;
 
         const { rows, count: total } = await AddressModel.findAndCountAll({
+            where: {
+                id_user: userId
+            },
             include: [
                 {
                     model: UserModel,
