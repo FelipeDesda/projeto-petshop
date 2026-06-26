@@ -1,5 +1,20 @@
 # PetShop API - Desenvolvimento Web
 
+## Credenciais do Banco de Dados
+
+| Parâmetro   | Valor              |
+| ----------- | ------------------ |
+| **Host**    | `localhost`        |
+| **Porta**   | `6789`             |
+| **Usuário** | `unifaat_user`     |
+| **Senha**   | `unifaat_password` |
+
+---
+
+## Estrutura do Projeto
+
+* **SQL/**: Contém todos os scripts DDL utilizados na criação da estrutura do banco de dados.
+
 ## 1. Identificação do Projeto
 
 **Sistema:** PetShop API.

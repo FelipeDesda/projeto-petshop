@@ -1,3 +1,5 @@
+-- Insere dados na tabela clientes
+
 INSERT INTO clientes (nome_cliente, cpf, telefone, email, nome_animal, especie, raca, idade_animal, sexo_animal) VALUES
 ('Alexandre Soares', '142.537.789-01', '(11) 98451-2311', 'alexandre.soares@gmail.com', 'Mel', 'Cachorro', 'Poodle', 4, 'F'),
 ('Ana Beatriz Souza', '253.647.871-02', '(21) 97122-3455', 'ana.souza@yahoo.com', 'Apollo', 'Cachorro', 'Golden Retriever', 2, 'M'),
@@ -90,4 +92,38 @@ INSERT INTO clientes (nome_cliente, cpf, telefone, email, nome_animal, especie, 
 ('Milton Guedes', '654.951.487-96', '(21) 91444-8855', 'milton.g@hotmail.com', 'Sopro', 'Cachorro', 'Poodle', 2, 'M'),
 ('Flávio Venturini', '147.753.263-97', '(31) 91555-8866', 'flavio.v@live.com', 'Espanhola', 'Gato', 'Angorá', 3, 'F'),
 ('Jane Duboc', '258.852.159-98', '(21) 91666-8877', 'jane.d@gmail.com', 'Doce', 'Cachorro', 'Maltês', 7, 'F'),
-('Nelson Faria', '369.159.753-99', '(21) 91777-8888', 'nelson.f@uol.com.br', 'Cordas', 'Cachorro', 'Golden Retriever', 4, 'M');
+('Nelson Faria', '369.159.753-99', '(21) 91777-8888', 'nelson.f@uol.com.br', 'Cordas', 'Cachorro', 'Golden Retriever', 4, 'M')
+
+--Insere dados na tabela veterinarios
+
+INSERT INTO public.veterinarios (nome, crmv, telefone, email) VALUES
+('Bruno Lima', 'CRMV-PR11111', '(41) 91111-2222', 'bruno.lima.vet@gmail.com'),
+('Fernanda Dias', 'CRMV-SC22222', '(48) 92222-3333', 'fernanda.dias.veterinaria@outlook.com'),
+('Gabriel Cruz', 'CRMV-BA33333', '(71) 93333-4444', 'gabriel.cruz@hotmail.com'),
+('Amanda Rocha', 'CRMV-PE44444', '(81) 94444-5555', 'amanda.rocha.vet@yahoo.com'),
+('Lucas Martins', 'CRMV-CE55555', '(85) 95555-6666', 'lucas.martins@veterinaria.com.br'),
+('Beatriz Gomes', 'CRMV-DF66666', '(61) 96666-7777', 'beatriz.gomes.vet@icloud.com'),
+('Rodrigo Melo', 'CRMV-GO77777', '(62) 97777-8888', 'rodrigo.melo.vet@gmail.com'),
+('Juliana Paiva', 'CRMV-ES88888', '(27) 98888-9999', 'juliana.paiva@outlook.com'),
+('Thiago Reis', 'CRMV-MA99999', '(98) 99999-1111', 'thiago.reis.veterinario@hotmail.com'),
+('Camila Faria', 'CRMV-MS10101', '(67) 91010-2020', 'camila.faria.vet@yahoo.com'),
+('Felipe Neves', 'CRMV-MT20202', '(65) 92020-3030', 'felipe.neves@veterinaria.com.br'),
+('Larissa Cruz', 'CRMV-PA30303', '(91) 93030-4040', 'larissa.cruz.vet@gmail.com'),
+('Pedro Santos', 'CRMV-RN40404', '(84) 94040-5050', 'pedro.santos.vet@outlook.com'),
+('Vanessa Lima', 'CRMV-PB50505', '(83) 95050-6060', 'vanessa.lima@hotmail.com'),
+('André Ramos', 'CRMV-AL60606', '(82) 96060-7070', 'andre.ramos.veterinario@yahoo.com'),
+('Letícia Rosa', 'CRMV-SE70707', '(79) 97070-8080', 'leticia.rosa.vet@veterinaria.com.br'),
+('Gustavo Pires', 'CRMV-PI80808', '(86) 98080-9090', 'gustavo.pires@gmail.com'),
+('Aline Vieira', 'CRMV-TO90909', '(63) 99090-1010', 'aline.vieira.vet@outlook.com'),
+('Daniel Freire', 'CRMV-AM12121', '(92) 91212-2323', 'daniel.freire@hotmail.com'),
+('Isabela Sales', 'CRMV-RO23232', '(69) 92323-3434', 'isabela.sales.vet@yahoo.com'),
+('Marcos Cunha', 'CRMV-AC34343', '(68) 93434-4545', 'marcos.cunha@veterinaria.com.br'),
+('Patricia Luz', 'CRMV-RR45454', '(95) 94545-5656', 'patricia.luz.vet@gmail.com'),
+('Leonardo Mota', 'CRMV-AP56565', '(96) 95656-6767', 'leonardo.mota@outlook.com'),
+('Tatiana Ribeiro', 'CRMV-SP22113', '(11) 91122-3344', 'tatiana.ribeiro.vet@hotmail.com'),
+('Marcelo Nogueira', 'CRMV-RJ44335', '(21) 92233-4455', 'marcelo.nogueira.vet@yahoo.com'),
+('Sabrina Toledo', 'CRMV-MG66557', '(31) 93344-5566', 'sabrina.toledo@veterinaria.com.br'),
+('Renato Cardoso', 'CRMV-RS88779', '(51) 94455-6677', 'renato.cardoso.vet@gmail.com'),
+('Bárbara Franco', 'CRMV-PR99881', '(41) 95566-7788', 'barbara.franco@outlook.com'),
+('Eduardo Antunes', 'CRMV-SC11224', '(48) 96677-8899', 'eduardo.antunes.vet@hotmail.com'),
+('Priscila Machado', 'CRMV-BA33446', '(71) 97788-9900', 'priscila.machado@veterinaria.com.br');
