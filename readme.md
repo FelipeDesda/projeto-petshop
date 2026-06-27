@@ -339,7 +339,7 @@ docker compose logs nginx-container
 Inspecionar rede:
 
 ```sh
-docker network inspect unifaat-2026-dw-project_backend-network
+docker inspect projeto-petshop_backend-network
 ```
 
 Testar persistência:
