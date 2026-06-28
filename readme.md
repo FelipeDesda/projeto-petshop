@@ -2,7 +2,7 @@
 
 ## Vídeo requisitados
 * **INFRA**: https://www.youtube.com/watch?v=1l3uOazQnOQ
-* **Banco de Dados**: 
+* **Banco de Dados**: https://www.youtube.com/watch?v=2KptdSo7Y50
 
 ## Credenciais do Banco de Dados
 
