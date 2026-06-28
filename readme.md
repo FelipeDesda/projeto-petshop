@@ -1,5 +1,9 @@
 # PetShop API - Desenvolvimento Web
 
+## Vídeo requisitados
+* **INFRA**: https://www.youtube.com/watch?v=1l3uOazQnOQ
+* **Banco de Dados**: 
+
 ## Credenciais do Banco de Dados
 
 | Parâmetro   | Valor              |
